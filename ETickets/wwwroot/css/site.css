@@ -22,6 +22,7 @@ body {
 }
 
 .container {
+    margin-top: 20px
 }
 main{
 }
@@ -49,3 +50,34 @@ main{
     background-color:salmon;
     border-color:brown;
 }
+
+
+
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+.card-header, .card-body, .card-button a {
+    background-color: #f8f9fa;
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+.card-text {
+    margin-bottom: 1rem;
+}
+
+.card-button a {
+    margin-right: 10px;
+}
+
+.book-btn.btn-danger {
+    background-color: red !important;
+    border-color: red !important;
