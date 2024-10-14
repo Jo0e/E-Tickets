@@ -1,0 +1,51 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.container {
+}
+main{
+}
+.Search-bar form{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+.card-button {
+    margin-left:1rem;
+    margin-top:0.7rem;
+}
+.cards-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.not-found {
+    margin: 50px;
+    color:brown;
+}
+.not-found-container {
+    width: 100%;
+    margin-top: 250px;
+    background-color:salmon;
+    border-color:brown;
+}

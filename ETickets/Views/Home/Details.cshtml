@@ -1,0 +1,47 @@
+﻿@model Movie
+@{
+    var actors = ViewBag.Actors as ICollection<ActorMovie>;
+}
+<span class="badge text-bg-dark" style="background-color:royalblue; padding:10px 15px;"> @Model.MovieStatus</span>
+<h3>Details of @Model.Name</h3>
+<div class="card mb-3 flex-wrap" style="max-width: 100%;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <p class="card-text">Description: @Model.Description </p>
+                <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@Model.Price</span></p>
+                <p class="card-text">Cinema: @Model.Cinema.Name</p>
+                <p class="card-text">Start Date: @Model.StartDate.ToString()</p>
+                <p class="card-text">End Date: @Model.EndDate.ToString()</p>
+                <p class="card-text">Category: @Model.Category.Name</p>
+                @foreach (var item in actors)
+                {
+                    <a href="/Actors/Index?id=@item.Actor.Id"><img src="~/images/cast/@item.Actor.ProfilePicture" style="width:45px;" /></a>
+                }
+                <p><small>Trailer</small></p>
+                <video width="300" height="180" controls>
+                    <source src="@Model.TrailerUrl" type="video/mp4">
+                </video>
+            </div>
+            <div class="card-button">
+                <a class="btn btn-success book-btn" data-moviestatus="@((int)@Model.MovieStatus)">Book Ticket</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".book-btn").each(function () {
+            var movieStatus = $(this).data("moviestatus");
+            if (movieStatus == 2) { // Assuming 'Expired' corresponds to 2
+                $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
+            }
+        });
+    });
+</script>
