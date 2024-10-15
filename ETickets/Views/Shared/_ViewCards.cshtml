@@ -1,0 +1,30 @@
+﻿@model Movie
+            <div class="card mb-3 pb-4" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="card-header" >
+                        <h5 class="card-title">@Model.Name</h5>
+                    </div>
+
+                    <div class="col-md-4">
+                        <img src="~/images/movies/@Model.ImgUrl" class="img-fluid  card-img" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@Model.Price</span></p>
+                            <p class="card-text">Cinema: @Model.Cinema.Name </p>
+                            <p class="card-text">Start Date: @Model.StartDate.ToString("MMMM dd, yyyy")</p>
+                            <p class="card-text">End Date: @Model.EndDate.ToString("MMMM dd, yyyy")</p>
+                            <p class="card-text">Category: @Model.Category.Name</p>
+                            <span class="badge badge-primary card-text" style=" padding:10px 15px;"> @Model.MovieStatus</span>
+                        </div>
+                        <div class="card-button">
+                            <a href="/Home/Details?id=@Model.Id" class="btn btn-outline-secondary">More Details</a>
+
+
+                            <a id="bookBtn-@Model.Id" class="btn btn-success book-btn"
+                            data-moviestatus="@((int)Model.MovieStatus)">Book Ticket</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    

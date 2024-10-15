@@ -3,14 +3,16 @@
     var actors = ViewBag.Actors as ICollection<ActorMovie>;
 }
 <span class="badge text-bg-dark" style="background-color:royalblue; padding:10px 15px;"> @Model.MovieStatus</span>
+<hr />
 <h3>Details of @Model.Name</h3>
-<div class="card mb-3 flex-wrap" style="max-width: 100%;">
+<hr />
+<div class="card mb-3" style="max-width: 100%;">
     <div class="row g-0">
         <div class="col-md-4">
-            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="...">
+            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded" alt="...">
         </div>
-        <div class="col-md-8">
-            <div class="card-body">
+        <div class="col-md-8 pb-3">
+            <div class="card-body ">
                 <p class="card-text">Description: @Model.Description </p>
                 <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@Model.Price</span></p>
                 <p class="card-text">Cinema: @Model.Cinema.Name</p>

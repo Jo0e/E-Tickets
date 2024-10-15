@@ -1,17 +1,62 @@
 ﻿@model ICollection<Movie>
+@{
+    var category = ViewBag.Categories as ICollection<Category>;
+    var Cinema = ViewBag.Cinemas as ICollection<Cinema>;
+}
 
-<h3>Search Result:-</h3>
+<h3>Find the perfect movie for you</h3>
 <hr />
+<form class="row g-3" action="/Category/Filter" method="post">
+    <div class="col-md-4">
+        <label for="inputState" class="form-label">Category</label>
+        <select id="inputState" name="CategoryId"  class="form-select">
+            @foreach (var item in category)
+            {
+                <option selected value="@item.Id"> @item.Name</option>
+            }
+            <option value="" disabled selected>Select a Category</option> <!-- Placeholder option -->
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="inputState" class="form-label">Cinema</label>
+        <select  id="inputState" name="CinemaId" class="form-select">
+            @foreach (var item in Cinema)
+            {
+                <option selected value="@item.Id">@item.Name</option>
+            }
+            <option value="" disabled selected>Select a cinema</option> <!-- Placeholder option -->
+        </select>
+    </div>  
+
+
+    <div class="col-md-4">
+        <label for="inputState" class="form-label">Availability</label>
+        <select id="inputState" name="AvailabilityId" class="form-select">
+            <option value="@MovieStatus.Available">Available</option>
+         <option value="@MovieStatus.Upcoming">UpComing</option>
+         <option value="@MovieStatus.Expired">Expired</option>
+            <option value="" disabled selected>Select Availability</option> <!-- Placeholder option -->
+        </select>
+    </div>
+
+    <hr />
+    <div class="row-cols-md-6  text-center mt-4 mb-5">
+        <button type="submit" class="btn btn-dark btn-color">Submit</button>
+    </div>
+</form>
+
+
 
 <div class="cards-wrap">
     @foreach (var item in Model)
     {
         <div class="card mb-3 pb-4" style="max-width: 540px;">
             <div class="row g-0">
-                <div class="card-header" >
+                <div class="card-header">
                     <h5 class="card-title">@item.Name</h5>
                 </div>
-               
+
                 <div class="col-md-4">
                     <img src="~/images/movies/@item.ImgUrl" class="img-fluid  card-img" alt="...">
                 </div>
@@ -29,7 +74,7 @@
 
 
                         <a id="bookBtn-@item.Id" class="btn btn-success book-btn"
-                        data-moviestatus="@((int)item.MovieStatus)">Book Ticket</a>
+                           data-moviestatus="@((int)item.MovieStatus)">Book Ticket</a>
                     </div>
                 </div>
             </div>
