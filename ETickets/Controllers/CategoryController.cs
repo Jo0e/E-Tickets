@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ETickets.Controllers
 {
-    public class Category : Controller
+    public class CategoryController : Controller
     {
         ApplicationDbContext context = new ApplicationDbContext();
         public IActionResult Index()
         {
             var categories = context.Categories.ToList();
-            ViewBag.Categories = categories;
             return View(categories);
         }
         public IActionResult Details(int id)
@@ -20,22 +19,23 @@ namespace ETickets.Controllers
             return View(movies);
         }
 
+        // Filter for the user so he can chose a film passed on his needs 
         public IActionResult Filter()
         {
             var categories = context.Categories.ToList();
             ViewBag.Categories = categories;
             var cinemas = context.Cinemas.ToList();
             ViewBag.Cinemas = cinemas;
-            var movies = new List<Movie>(); // Start with an empty list
-            return View(movies);
-
+            var movies = new List<Movie>(); // empty list
+            
+                return View(movies);
         }
 
         [HttpPost]
         public IActionResult Filter(int CategoryId, int CinemaId, MovieStatus AvailabilityId)
         {
             var movie = context.Movies.Include(e => e.Cinema).Include(m => m.Category)
-                .Where(c => c.Category.Id == CategoryId && c.Cinema.Id==CinemaId && c.MovieStatus==AvailabilityId)
+                .Where(c => c.Category.Id == CategoryId && c.Cinema.Id == CinemaId && c.MovieStatus == AvailabilityId)
                 .ToList();
 
             var categories = context.Categories.ToList();
@@ -43,7 +43,17 @@ namespace ETickets.Controllers
 
             var cinemas = context.Cinemas.ToList();
             ViewBag.Cinemas = cinemas;
-            return View(movie);
+            if (movie.Any())
+            {
+                // add the result in the same page
+                return View(movie);
+            }
+            else
+            {
+                // If there is no movie have the user needs, send him the temp data
+                TempData["NotFound"] = "Sorry we cant found Movie like that";
+                return RedirectToAction("Filter");
+            }
         }
 
     }

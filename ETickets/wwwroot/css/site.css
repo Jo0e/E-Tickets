@@ -21,7 +21,7 @@ body {
     font-family: 'Roboto', sans-serif;
     margin-bottom: 60px;
     background-image: url('../images/Background3.jpeg');
-    background-size: cover; /* Adjust image size to cover the entire background */
+    background-size: cover; 
     background-attachment: fixed;
     color: #fff
 }
@@ -31,6 +31,7 @@ h2 {
     text-align: center;
     margin-bottom: 20px;
 }
+
 .table {
     width: 100%;
     margin: 20px auto;
@@ -38,6 +39,7 @@ h2 {
     background-color: #fff; /* Background color for table */
     color: #333; /* Text color for table */
 }
+
     .table th, .table td {
         padding: 10px;
         border: 0px solid #ddd;
@@ -46,7 +48,6 @@ h2 {
 
     .table th {
         background: linear-gradient(to bottom, #180242,#4a3570);
-        /*        background-color: #007bff;*/
         color: #fff;
     }
 
@@ -59,7 +60,6 @@ h2 {
     }
 
     .table a {
-/*        color: #007bff;*/
         color: #10255c;
         text-decoration: none;
     }
@@ -71,10 +71,17 @@ h2 {
 
 .container {
     background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
     border-radius: 10px;
+    padding: 20px;
     margin-top: 20px;
     color: #fff;
+}
+
+.container2 {
+    background: rgba(202, 199, 212, 0.7);
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
 }
 
 main {
@@ -82,7 +89,46 @@ main {
 
 .Search-bar form {
     display: flex;
+    z-index: 1000;
 }
+
+#suggestions {
+    position: absolute;
+    top: 100%;
+    left: 75%;
+    max-width:320px;
+    z-index: 1050; /* to be in the top */
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .Search-bar form {
+        flex-direction: row;
+    }
+
+    #suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0%; 
+        max-height: 300px; /* Limit the height to 3 items */
+    }
+
+        #suggestions a {
+            display: flex;
+            align-items: center;
+            padding: 10px; 
+        }
+
+        #suggestions img {
+            margin-right: 10px; 
+        }
+}
+
+#suggestions {
+    z-index: 1050; /* Ensure it stays on top of other elements */
+}
+
 
 .Search-bar .form-control {
     margin-right: 10px;
@@ -125,6 +171,7 @@ main {
     overflow: hidden;
     position: relative;
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    z-index: 100;
 }
 
     .card:hover {
@@ -132,19 +179,21 @@ main {
         box-shadow: 0 8px 16px rgba(0,0,0,0.3);
     }
 
-.card-header, .card-body{
-    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+.card-header, .card-body {
+    background-color: rgba(255, 255, 255, 0.8); 
     color: #333;
 }
+
 .card-header {
     background: linear-gradient(to top, #2c4391,#4a3570);
-    /*background-color: #007bff;*/ /* Blue background */
     color: #fff;
     padding: 10px 15px;
 }
+
 .card-body {
     padding: 15px;
 }
+
 .card-title {
     font-size: 1.25rem;
     font-family: 'Lobster', cursive;
@@ -157,7 +206,7 @@ main {
 
 .card-img {
     height: 16.45rem;
-    border-radius: 0px 0px 15px 15px;
+    border-radius: 0px 0px 15px 0px;
 }
 
 
@@ -167,9 +216,10 @@ main {
     margin-left: 7rem;
     justify-content: end;
 }
-.card-button a {
-    margin-right: 10px;
-}
+
+    .card-button a {
+        margin-right: 10px;
+    }
 
 .book-btn.btn-danger {
     background-color: red !important;
@@ -177,10 +227,10 @@ main {
 }
 
 @media (max-width: 768px) {
-    /* Mobile-specific styles */
     .navbar-nav {
         flex-direction: column;
     }
+
     .card-img {
         height: 27.45rem;
     }
@@ -190,6 +240,7 @@ main {
     background: linear-gradient(to right, #180242,#4a3570); /* Gradient from dark gray to slightly lighter gray */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .navbar-brand {
     font-family: 'Lobster', cursive;
     font-size: 1.8rem;
@@ -198,21 +249,118 @@ main {
 
 .navbar-nav .nav-link {
     font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
+    font-size: 1.005rem;
     color: #333;
 }
 
     .navbar-nav .nav-link:hover {
-        /*        color: #ffeb3b;*/
         color: #FF4500;
     }
+
 .navbar-nav .nav-item.active .nav-link {
-    /*    color: #ffeb3b;*/
     color: #007bff;
 }
-
+/*
 footer {
     background: rgba(0, 0, 0, 0.8);
     text-align: center;
     color: #ccc;
+}
+*/
+
+
+.error-page {
+    text-align: center;
+}
+
+    .error-page .error-inner {
+        display: inline-block;
+    }
+
+        .error-page .error-inner h1 {
+            font-size: 140px;
+            text-shadow: 3px 5px 2px #3333;
+            color: #d2c5fc;
+            font-weight: 700;
+        }
+
+            .error-page .error-inner h1 span {
+                display: block;
+                font-size: 25px;
+                color: #d2c5fc;
+                font-weight: 600;
+                text-shadow: none;
+            }
+
+        .error-page .error-inner p {
+            padding: 20px 15px;
+        }
+
+    .error-page .search-form {
+        width: 100%;
+        position: relative;
+    }
+
+        .error-page .search-form input {
+            width: 400px;
+            height: 50px;
+            padding: 0px 78px 0 30px;
+            border: none;
+            background: #d2c5fc;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .error-page .search-form .btn {
+            width: 80px;
+            height: 50px;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #9172f7;
+            display: inline-block;
+            position: relative;
+            top: -2px;
+        }
+
+            .error-page .search-form .btn i {
+                font-size: 16px;
+            }
+
+            .error-page .search-form .btn:hover {
+                background: #d2c5fc;
+            }
+
+@media (max-width: 768px) {
+    .error-page .error-inner h1 span {
+        display: flex;
+        position: center;
+    }
+
+    .error-page .search-form {
+        width: 100%;
+        display: flex;
+        position: center;
+    }
+
+        .error-page .search-form input {
+            width: 260px;
+            padding: 0px 65px 0 30px;
+        }
+
+        .error-page .search-form .btn {
+            width: 55px;
+            height: 50px;
+            display: inline-block;
+            position: relative;
+            top: 20px;
+        }
+}
+.reglar-text {
+    font-size: 60px;
+    text-shadow: 3px 5px 2px #3333;
+    color: #d2c5fc;
+    font-weight: 700;
 }

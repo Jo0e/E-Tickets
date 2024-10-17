@@ -41,7 +41,7 @@
     $(document).ready(function () {
         $(".book-btn").each(function () {
             var movieStatus = $(this).data("moviestatus");
-            if (movieStatus == 2) { // Assuming 'Expired' corresponds to 2
+            if (movieStatus == 2) { 
                 $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
             }
         });

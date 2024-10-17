@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ETickets.Controllers
 {
-    public class Cinema : Controller
+    public class CinemaController : Controller
     {
         ApplicationDbContext context = new ApplicationDbContext();
         public IActionResult Index()

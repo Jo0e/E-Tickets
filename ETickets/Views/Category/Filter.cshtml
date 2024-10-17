@@ -8,35 +8,32 @@
 <hr />
 <form class="row g-3" action="/Category/Filter" method="post">
     <div class="col-md-4">
-        <label for="inputState" class="form-label">Category</label>
-        <select id="inputState" name="CategoryId"  class="form-select">
+        <label for="CategoryId" class="form-label">Category</label>
+        <select id="CategoryId" name="CategoryId" class="form-select" required>
+            <option value="" disabled selected hidden>Select a Category</option> <!-- Placeholder -->
             @foreach (var item in category)
             {
-                <option selected value="@item.Id"> @item.Name</option>
+                <option value="@item.Id">@item.Name</option>
             }
-            <option value="" disabled selected>Select a Category</option> <!-- Placeholder option -->
         </select>
     </div>
-
     <div class="col-md-4">
-        <label for="inputState" class="form-label">Cinema</label>
-        <select  id="inputState" name="CinemaId" class="form-select">
+        <label for="CinemaId" class="form-label">Cinema</label>
+        <select id="CinemaId" name="CinemaId" class="form-select" required>
+            <option value="" disabled selected hidden>Select a cinema</option> <!-- Placeholder -->
             @foreach (var item in Cinema)
             {
-                <option selected value="@item.Id">@item.Name</option>
+                <option value="@item.Id">@item.Name</option>
             }
-            <option value="" disabled selected>Select a cinema</option> <!-- Placeholder option -->
         </select>
-    </div>  
-
-
+    </div>
     <div class="col-md-4">
-        <label for="inputState" class="form-label">Availability</label>
-        <select id="inputState" name="AvailabilityId" class="form-select">
-            <option value="@MovieStatus.Available">Available</option>
-         <option value="@MovieStatus.Upcoming">UpComing</option>
-         <option value="@MovieStatus.Expired">Expired</option>
-            <option value="" disabled selected>Select Availability</option> <!-- Placeholder option -->
+        <label for="AvailabilityId" class="form-label">Availability</label>
+        <select id="AvailabilityId" name="AvailabilityId" class="form-select" required>
+            <option value="" disabled selected hidden>Select Availability</option> <!-- Placeholder -->
+            <option value="Available">Available</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Expired">Expired</option>
         </select>
     </div>
 
@@ -46,39 +43,37 @@
     </div>
 </form>
 
+@if (TempData["NotFound"] != null)
+{
+    <div class="error-inner ">
+        <h1 class="text-center reglar-text" style="font-size:8rem;"><i class="bi bi-patch-exclamation"></i></h1>
+    </div>
+    <h3 class="text-center reglar-text">@TempData["NotFound"]</h3>
+
+}
+
+    @* JS for Prevent form submission without choosing Values *@
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        let categorySelect = document.getElementById('CategoryId');
+        let cinemaSelect = document.getElementById('CinemaId');
+        let cinemaSelect = document.getElementById('AvailabilityId');
+
+        if (categorySelect.value === "" || cinemaSelect.value === "" || availabilitySelect.value === "") {
+            e.preventDefault(); 
+            alert('Please select valid options for Category, Cinema, and Availability.');
+        }
+    });
+</script>
+
+
+
 
 
 <div class="cards-wrap">
     @foreach (var item in Model)
     {
-        <div class="card mb-3 pb-4" style="max-width: 540px;">
-            <div class="row g-0">
-                <div class="card-header">
-                    <h5 class="card-title">@item.Name</h5>
-                </div>
-
-                <div class="col-md-4">
-                    <img src="~/images/movies/@item.ImgUrl" class="img-fluid  card-img" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@item.Price</span></p>
-                        <p class="card-text">Cinema: @item.Cinema.Name </p>
-                        <p class="card-text">Start Date: @item.StartDate.ToString("MMMM dd, yyyy")</p>
-                        <p class="card-text">End Date: @item.EndDate.ToString("MMMM dd, yyyy")</p>
-                        <p class="card-text">Category: @item.Category.Name</p>
-                        <span class="badge badge-primary card-text" style=" padding:10px 15px;"> @item.MovieStatus</span>
-                    </div>
-                    <div class="card-button">
-                        <a href="/Home/Details?id=@item.Id" class="btn btn-outline-secondary">More Details</a>
-
-
-                        <a id="bookBtn-@item.Id" class="btn btn-success book-btn"
-                           data-moviestatus="@((int)item.MovieStatus)">Book Ticket</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await Html.PartialAsync("_ViewCards", item)
     }
 </div>
 
@@ -89,7 +84,7 @@
     $(document).ready(function () {
         $(".book-btn").each(function () {
             var movieStatus = $(this).data("moviestatus");
-            if (movieStatus == 2) { // Assuming 'Expired' corresponds to 2
+            if (movieStatus == 2) { 
                 $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
             }
         });

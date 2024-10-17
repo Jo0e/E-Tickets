@@ -18,31 +18,49 @@ namespace ETickets.Controllers
 
         public IActionResult Index()
         {
-            var movies = context.Movies.Include(e=>e.Category).Include(e=>e.Cinema).ToList();
+            var movies = context.Movies.Include(e => e.Category).Include(e => e.Cinema).ToList();
             return View(movies);
         }
 
         public IActionResult Details(int id)
         {
-            var actors =  context.ActorMovies.Where(e => e.MovieId == id).Include(e=>e.Actor).ToList();
+            var actors = context.ActorMovies.Where(e => e.MovieId == id).Include(e => e.Actor).ToList();
             ViewBag.Actors = actors;
 
             var details = context.Movies.Include(e => e.Category).Include(e => e.Cinema).Where(w => w.Id == id).FirstOrDefault();
-            return View(details);
+            if (details != null)
+            {
+                return View(details);
+            }
+            return RedirectToAction("NotFound", "Errors");
+
         }
-        [HttpPost]
-        public IActionResult Search(string Name) 
+
+        // This is to make the search show the first 3 results in a list without pressing the search btn 
+        [HttpGet]
+        public JsonResult SearchMovies(string name)
         {
-            var movies = context.Movies.Where(m=>m.Name.Contains(Name)).Include(e => e.Category).Include(e => e.Cinema).ToList();
+            var movies = context.Movies
+                               .Where(m => m.Name.Contains(name))
+                               .Select(m => new { m.Id, m.Name, ImgUrl = m.ImgUrl })
+                               .ToList();
+            return Json(movies);
+        }
+
+
+        [HttpPost]
+        public IActionResult Search(string Name)
+        {
+            var movies = context.Movies.Where(m => m.Name.Contains(Name)).Include(e => e.Category).Include(e => e.Cinema).ToList();
             if (movies.Any())
             {
                 return View(movies);
             }
-            else 
+            else
             {
                 return RedirectToAction("SearchNotFound", "Errors");
             }
-        } 
+        }
 
         public IActionResult Privacy()
         {
