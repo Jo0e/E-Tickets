@@ -1,10 +1,20 @@
 ﻿using ETickets.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ETickets.ViewModel;
 
 namespace ETickets.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        //public ApplicationDbContext() : this(new DbContextOptions<ApplicationDbContext>())
+        //{
+        //}
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<ActorMovie> ActorMovies { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -12,15 +22,21 @@ namespace ETickets.Data
         public DbSet<Movie> Movies { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
-            var connection = builder.GetConnectionString("DefualtConnection");
-            optionsBuilder.UseSqlServer(connection);
+            if (!optionsBuilder.IsConfigured)
+            {
+                base.OnConfiguring(optionsBuilder);
+                var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
+                var connection = builder.GetConnectionString("DefualtConnection");
+                optionsBuilder.UseSqlServer(connection);
+
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Movie>().ToTable(t => t.HasTrigger("TR_UpdateMovieStatusOnEndDate"));
 
             modelBuilder.Entity<ActorMovie>()
                 .HasKey(e => new
@@ -41,6 +57,9 @@ namespace ETickets.Data
 
 
 
+
         }
+        public DbSet<ETickets.ViewModel.ApplicationUserVM> ApplicationUserVM { get; set; } = default!;
+        public DbSet<ETickets.ViewModel.LoginVM> LoginVM { get; set; } = default!;
     }
 }

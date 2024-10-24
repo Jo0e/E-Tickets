@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ETickets.Models.Category>
+
+@{
+    ViewData["Title"] = "CategoryCRUD";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>CategoryCRUD</h1>
+<hr />
+<p>
+    <a asp-controller="Category" asp-action="Create" class="btn btn-outline-light">Create New</a>
+</p>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

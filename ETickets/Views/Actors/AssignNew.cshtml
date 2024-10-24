@@ -1,0 +1,53 @@
+﻿@model ICollection<Actor>
+
+@{
+    ViewData["Title"] = "AssignNew";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var movies = ViewBag.movies as ICollection<Movie>;
+}
+
+<h1>AssignNew</h1>
+
+<h4>ActorMovie</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AssignNew">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="Name" class="control-label"></label>
+                <select id="Name" name="ActorId" class="form-select" required>
+                    <option value="" disabled selected hidden>Select a Actor</option> <!-- Placeholder -->
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Id">@item.FirstName @item.LastName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="MovieId" class="control-label"></label>
+
+                <select id="MovieId" name="MovieId" class="form-select" required>
+                    <option value="" disabled selected hidden>Select a Movie</option> <!-- Placeholder -->
+                    @foreach (var item in movies)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Assign" class="btn btn-primary" /> |
+                <a asp-controller="Actors" asp-action="AssignActors" class="btn btn-outline-light">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ETickets.Models.Cinema>
+
+@{
+    ViewData["Title"] = "CinemaCRUD";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>CinemaCRUD</h1>
+<hr />
+<p>
+    <a asp-controller="Cinema" asp-action="Create" class="btn btn-outline-light">Create New</a>
+</p>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="width:40%;"> 
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CinemaLogo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.CinemaLogo)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td class="align-content-center ">
+                    <a asp-controller="Cinema" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Cinema" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

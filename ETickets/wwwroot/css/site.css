@@ -21,7 +21,7 @@ body {
     font-family: 'Roboto', sans-serif;
     margin-bottom: 60px;
     background-image: url('../images/Background3.jpeg');
-    background-size: cover; 
+    background-size: cover;
     background-attachment: fixed;
     color: #fff
 }
@@ -87,6 +87,10 @@ h2 {
 main {
 }
 
+.actors-img {
+    width: 50px;
+}
+
 .Search-bar form {
     display: flex;
     z-index: 1000;
@@ -96,7 +100,7 @@ main {
     position: absolute;
     top: 100%;
     left: 75%;
-    max-width:320px;
+    max-width: 320px;
     z-index: 1050; /* to be in the top */
     background: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -110,18 +114,18 @@ main {
     #suggestions {
         position: absolute;
         top: 100%;
-        left: 0%; 
+        left: 0%;
         max-height: 300px; /* Limit the height to 3 items */
     }
 
         #suggestions a {
             display: flex;
             align-items: center;
-            padding: 10px; 
+            padding: 10px;
         }
 
         #suggestions img {
-            margin-right: 10px; 
+            margin-right: 10px;
         }
 }
 
@@ -161,6 +165,15 @@ main {
 .btn-color {
     background: linear-gradient(to bottom, #180242,#4a3570);
 }
+.card-star{
+    position:absolute;
+    display:contents;
+
+}
+.card-star:hover {
+    color:black;
+}
+
 
 .card {
     background: rgba(255, 255, 255, 0.9);
@@ -180,7 +193,7 @@ main {
     }
 
 .card-header, .card-body {
-    background-color: rgba(255, 255, 255, 0.8); 
+    background-color: rgba(255, 255, 255, 0.8);
     color: #333;
 }
 
@@ -235,7 +248,22 @@ main {
         height: 27.45rem;
     }
 }
+.nav-icon {
+/*    display: inline-block;*/
+    font-size: 1.5rem;
 
+}
+.dropdown a {
+    color: aliceblue;
+}
+
+.dropdown a:hover {
+    color: grey;
+}
+
+.dropdown-menu a{
+    color: black;
+}
 .navbar {
     background: linear-gradient(to right, #180242,#4a3570); /* Gradient from dark gray to slightly lighter gray */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -358,9 +386,29 @@ footer {
             top: 20px;
         }
 }
+
 .reglar-text {
     font-size: 60px;
     text-shadow: 3px 5px 2px #3333;
     color: #d2c5fc;
     font-weight: 700;
 }
+
+.Dashboard-btn a {
+    display: inline-block;
+    padding: 4rem 5rem;
+    margin:1rem;
+    margin-left: 5rem;
+    width: 14rem;
+    height:12rem;
+    border-radius: 20px;
+    background: linear-gradient(to bottom, #180242,#4a3570);
+    transition:0.5s;
+    border: 1.5px solid #000000;
+}
+
+    .Dashboard-btn a:hover {
+        transform: scale(1.05);
+        background: linear-gradient(to top, #180242,#4a3570);
+        border: 1px solid #ddd;
+    }

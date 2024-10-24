@@ -1,0 +1,92 @@
+﻿@model IEnumerable<ETickets.Models.Movie>
+
+@{
+    ViewData["Title"] = "MovieCRUD";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>MovieCRUD</h1>
+<hr />
+<p>
+    <a asp-controller="Movie" asp-action="Create" class="btn btn-outline-light">Create New</a>
+</p>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImgUrl)
+            </th>
+            @*  <th>
+            @Html.DisplayNameFor(model => model.TrailerUrl)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MovieStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cinema)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td class="align-content-center ">
+                    <img src="~/images/movies/@Html.DisplayFor(modelItem => item.ImgUrl)" class="actors-img " alt="Alternate Text" />
+
+                </td>
+                @*  <td>
+            @Html.DisplayFor(modelItem => item.TrailerUrl)
+            </td> *@
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.MovieStatus)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.Cinema.Name)
+                </td>
+                <td class="align-content-center ">
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td class="align-content-center ">
+                    <a asp-controller="Movie" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Movie" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ETickets.Models.ActorMovie>
+
+@{
+    ViewData["Title"] = "AssignActors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>AssignActors</h1>
+
+<p>
+    <a asp-action="AssignNew" class="btn btn-outline-light">Assign New Actors</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Actor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Actor.FirstName) @Html.DisplayFor(modelItem => item.Actor.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Movie.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit Actor", "Edit", new { id = item.ActorId }) |
+                    @Html.ActionLink("Edit Movie", "Edit","Movie", new { id = item.MovieId }) |
+                    @Html.ActionLink("Movie Details", "Details", "Home", new { id = item.MovieId }) |
+                    @Html.ActionLink("UnAssign", "UnAssign", new { MovieId = item.MovieId, ActorId = item.ActorId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
