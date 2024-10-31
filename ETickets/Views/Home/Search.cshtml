@@ -1,12 +1,22 @@
 ﻿@model ICollection<Movie>
-
+@{
+    bool showStar;
+    if (User.Identity.IsAuthenticated)
+    {
+        showStar = true;
+    }
+    else
+    {
+        showStar = false;
+    }
+}
 <h3>Search Result:-</h3>
 <hr />
 
 <div class="cards-wrap">
     @foreach (var item in Model)
     {
-        @await Html.PartialAsync("_ViewCards", item)   
+        @await Html.PartialAsync("_ViewCards", item, new ViewDataDictionary(ViewData) { { "ShowStar", showStar } })
     }
 </div>
 
@@ -20,6 +30,40 @@
             if (movieStatus == 2) { 
                 $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
             }
+        });
+    });
+</script>
+
+@* 
+<script>
+    document.querySelectorAll('.card-star').forEach(function (star) {
+        star.addEventListener('click', function (event) {
+            event.stopPropagation(); // Stop the click event from bubbling up to the card
+            this.classList.toggle('golden-star');
+        });
+    });
+</script> *@
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.card-star').on('click', function (event) {
+            event.preventDefault();
+            const movieId = $(this).data('movie-id');
+            const starElement = $(this);
+
+            $.ajax({
+                url: '@Url.Action("AddToWishlist", "Wishlist")',
+                type: 'POST',
+                data: { movieId: movieId },
+                success: function (response) {
+                    if (response.success) {
+                        starElement.toggleClass('golden-star');
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
         });
     });
 </script>

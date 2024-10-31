@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using ETickets.Models;
 using Microsoft.AspNetCore.Identity;
+using Stripe;
+using ETickets.Utility;
 
 namespace ETickets
 {
@@ -29,6 +31,11 @@ namespace ETickets
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

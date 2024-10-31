@@ -63,17 +63,27 @@
             @Html.DisplayFor(model => model.MovieStatus)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cinema)
+           @*  @Html.DisplayNameFor(model => model.Cinema.Name) *@
+           Cinema Name
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CinemaId)
+            @Html.DisplayFor(model => model.Cinema.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
+@*             @Html.DisplayNameFor(model => model.Category.Name)*@
+            Category
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Id)
+            @Html.DisplayFor(model => model.Category.Name)
         </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalTickets)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalTickets)
+        </dd>
+
     </dl>
     
     <form asp-action="Delete">

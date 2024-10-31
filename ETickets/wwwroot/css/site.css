@@ -165,15 +165,64 @@ main {
 .btn-color {
     background: linear-gradient(to bottom, #180242,#4a3570);
 }
-.card-star{
-    position:absolute;
-    display:contents;
 
+.av-badge {
+    background-color: royalblue;
+    padding: 10px 15px;
+    margin-right: 10px;
+    font-size: 1.1rem;
 }
+
+.dtl-str {
+    font-size: 1.5rem;
+    padding: 0px 25px 3px 25px;
+    color: white;
+    border-radius: 7px;
+    background: royalblue;
+    /*        linear-gradient(to bottom, #9484b3,#827b8f);*/
+    display: inline-block;
+    transition: 0.6s;
+}
+
+    .dtl-str:hover {
+        color: royalblue;
+        transform: scale(1.1);
+        background: white;
+    }
+
+.card-star {
+    display: inline-block;
+    position: absolute;
+    /*    display:contents;*/
+    right: 5%;
+    bottom: 85%;
+    color: #263078;
+    font-size: 1.9rem;
+}
+
+.golden-star {
+    color: gold;
+}
+
+    .golden-star:hover {
+        color: gold !important;
+        /*        background: royalblue !important;*/
+        -webkit-text-stroke: 2px gold !important;
+    }
+
 .card-star:hover {
-    color:black;
+    color: white;
+    -webkit-text-stroke: 2px #4a3570;
 }
 
+.wish-del {
+    position: absolute;
+    /*    display:contents;*/
+    right: 5%;
+    bottom: 81%;
+    border-radius:20px;
+    opacity:90%;
+}
 
 .card {
     background: rgba(255, 255, 255, 0.9);
@@ -248,22 +297,24 @@ main {
         height: 27.45rem;
     }
 }
-.nav-icon {
-/*    display: inline-block;*/
-    font-size: 1.5rem;
 
+.nav-icon {
+    /*    display: inline-block;*/
+    font-size: 1.5rem;
 }
+
 .dropdown a {
     color: aliceblue;
 }
 
-.dropdown a:hover {
-    color: grey;
-}
+    .dropdown a:hover {
+        color: grey;
+    }
 
-.dropdown-menu a{
+.dropdown-menu a {
     color: black;
 }
+
 .navbar {
     background: linear-gradient(to right, #180242,#4a3570); /* Gradient from dark gray to slightly lighter gray */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -397,13 +448,13 @@ footer {
 .Dashboard-btn a {
     display: inline-block;
     padding: 4rem 5rem;
-    margin:1rem;
+    margin: 1rem;
     margin-left: 5rem;
     width: 14rem;
-    height:12rem;
+    height: 12rem;
     border-radius: 20px;
     background: linear-gradient(to bottom, #180242,#4a3570);
-    transition:0.5s;
+    transition: 0.5s;
     border: 1.5px solid #000000;
 }
 
@@ -411,4 +462,42 @@ footer {
         transform: scale(1.05);
         background: linear-gradient(to top, #180242,#4a3570);
         border: 1px solid #ddd;
+    }
+
+
+._failed {
+    border-bottom: solid 4px red !important;
+}
+
+    ._failed i {
+        color: red !important;
+    }
+
+._success {
+    box-shadow: 0 15px 25px #00000019;
+    padding: 45px;
+    width: 100%;
+    text-align: center;
+    margin: 40px auto;
+    border-bottom: solid 4px #28a745;
+}
+
+    ._success i {
+        font-size: 55px;
+        color: #28a745;
+    }
+
+    ._success h2 {
+        margin-bottom: 12px;
+        font-size: 40px;
+        font-weight: 500;
+        line-height: 1.2;
+        margin-top: 10px;
+    }
+
+    ._success p {
+        margin-bottom: 0px;
+        font-size: 18px;
+        color: #495057;
+        font-weight: 500;
     }

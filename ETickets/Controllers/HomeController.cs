@@ -1,6 +1,7 @@
 using ETickets.Data;
 using ETickets.Models;
 using ETickets.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -10,40 +11,63 @@ namespace ETickets.Controllers
 {
     public class HomeController : Controller
     {
-        //ApplicationDbContext context = new ApplicationDbContext();
-        public HomeController(IMovieRepository myMovieRepository, ILogger<HomeController> logger, IRepository<Movie> movieRepository)
+        
+        public HomeController(IMovieRepository myMovieRepository, ILogger<HomeController> logger,
+            IRepository<Movie> movieRepository, UserManager<ApplicationUser> userManager, IRepository<Wishlist> WishlistRepository)
         {
-            //this.movieRepository = movieRepository;
+            
             this.myMovieRepository = myMovieRepository;
             _logger = logger;
             this.movieRepository = movieRepository;
+            this.userManager = userManager;
+            wishlistRepository = WishlistRepository;
         }
         private readonly ILogger<HomeController> _logger;
         private readonly IRepository<Movie> movieRepository;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IRepository<Wishlist> wishlistRepository;
         private readonly IMovieRepository myMovieRepository;
 
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
+        
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            var movies = movieRepository.GetAll("Category", "Cinema");
-                //context.Movies.Include(e => e.Category).Include(e => e.Cinema).ToList();
+            int itemsNum = 8;
+            int totalMovies = movieRepository.GetAll().Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            var user = await userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                var wishlist = wishlistRepository.GetWithIncludes(w => w.UserId == user.Id, "Movie").ToList();
+                ViewBag.Wishlist = wishlist.Select(w => w.MovieId).ToList();
+            }
+
+            
+            var movies = movieRepository.GetAll("Category", "Cinema").Skip((pageNumber - 1) * itemsNum).Take(itemsNum);
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+
             return View(movies);
+
         }
 
-        public IActionResult Details(int id)
-        {
-            var actors = myMovieRepository.GetActorsByMovie(id);
-                //context.ActorMovies.Where(e => e.MovieId == id).Include(e => e.Actor).ToList();
-            ViewBag.Actors = actors;
-
-            var details = myMovieRepository.GetMovieDetails(id); 
-                //context.Movies.Include(e => e.Category).Include(e => e.Cinema).Where(w => w.Id == id).FirstOrDefault();
+        public async Task<IActionResult> Details(int id)
+        {            
+            var details = myMovieRepository.GetMovieDetails(id);
             if (details != null)
             {
+                var user = await userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    var wishlist = wishlistRepository.GetWithIncludes(w => w.UserId == user.Id, "Movie").ToList();
+                    ViewBag.Wishlist = wishlist.Select(w => w.MovieId).ToList();
+                }
                 return View(details);
             }
             return RedirectToAction("NotFound", "Errors");
@@ -63,8 +87,14 @@ namespace ETickets.Controllers
 
 
         [HttpPost]
-        public IActionResult Search(string Name)
+        public async Task<IActionResult> Search(string Name)
         {
+            var user = await userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                var wishlist = wishlistRepository.GetWithIncludes(w => w.UserId == user.Id, "Movie").ToList();
+                ViewBag.Wishlist = wishlist.Select(w => w.MovieId).ToList();
+            }
             var movies = myMovieRepository.SearchMovies(Name);
             //context.Movies.Where(m => m.Name.Contains(Name)).Include(e => e.Category).Include(e => e.Cinema).ToList();
             if (movies.Any())
@@ -87,5 +117,9 @@ namespace ETickets.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+
+
     }
 }

@@ -1,10 +1,23 @@
 ﻿@model Movie
 @{
+    var wishlist = ViewBag.Wishlist as List<int>;
+    var isInWishlist = wishlist != null && wishlist.Contains(Model.Id);
     var actors = ViewBag.Actors as ICollection<ActorMovie>;
 }
-<span class="badge text-bg-dark" style="background-color:royalblue; padding:10px 15px;"> @Model.MovieStatus</span>
 <hr />
-<h3>Details of @Model.Name</h3>
+<div class="d-flex justify-content-between text-center">
+    <h3>Details of @Model.Name</h3>
+    <div>
+        <span class="badge text-bg-dark av-badge">Tickets Remaining: @Model.TicketsRemaining</span>
+        <span class="badge text-bg-dark av-badge"> @Model.MovieStatus</span>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a href="#" class="dtl-str @(isInWishlist ? "golden-star" : "")" data-movie-id="@Model.Id">
+                <i class="bi bi-star-fill "></i>
+            </a>
+        }
+    </div>
+</div>
 <hr />
 <div class="card mb-3" style="max-width: 100%;">
     <div class="row g-0">
@@ -19,9 +32,9 @@
                 <p class="card-text">Start Date: @Model.StartDate.ToString()</p>
                 <p class="card-text">End Date: @Model.EndDate.ToString()</p>
                 <p class="card-text">Category: @Model.Category.Name</p>
-                @foreach (var item in actors)
+                @foreach (var item in Model.ActorMovies)
                 {
-                    <a href="/Actors/Index?id=@item.Actor.Id"><img src="~/images/cast/@item.Actor.ProfilePicture" style="width:45px;" /></a>
+                    <a href="/Actors/Index?id=@item.ActorId"><img src="~/images/cast/@item.Actor.ProfilePicture" style="width:45px;" /></a>
                 }
                 <p><small>Trailer</small></p>
                 <video width="300" height="180" controls>
@@ -29,7 +42,10 @@
                 </video>
             </div>
             <div class="card-button">
-                <a class="btn btn-success book-btn" data-moviestatus="@((int)@Model.MovieStatus)">Book Ticket</a>
+
+
+
+                <a href="/Carts/TicketIndex?movieId=@Model.Id" class="btn btn-success book-btn" data-moviestatus="@((int)@Model.MovieStatus)">Book Ticket</a>
             </div>
         </div>
     </div>
@@ -41,9 +57,33 @@
     $(document).ready(function () {
         $(".book-btn").each(function () {
             var movieStatus = $(this).data("moviestatus");
-            if (movieStatus == 2) { 
+            if (movieStatus == 2) {
                 $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
             }
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('.dtl-str').on('click', function (event) {
+            event.preventDefault();
+            const movieId = $(this).data('movie-id');
+            const starElement = $(this);
+
+            $.ajax({
+                url: '@Url.Action("AddToWishlist", "Wishlist")',
+                type: 'POST',
+                data: { movieId: movieId },
+                success: function (response) {
+                    if (response.success) {
+                        starElement.toggleClass('golden-star');
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
         });
     });
 </script>

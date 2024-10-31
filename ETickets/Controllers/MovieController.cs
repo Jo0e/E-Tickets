@@ -14,7 +14,7 @@ namespace ETickets.Controllers
         private readonly IRepository<Category> categoryRepository;
         private readonly IRepository<Cinema> cinemaRepository;
 
-        public MovieController(IRepository<Movie> movieRepository , IRepository<Category> categoryRepository, IRepository<Cinema> cinemaRepository)
+        public MovieController(IRepository<Movie> movieRepository, IRepository<Category> categoryRepository, IRepository<Cinema> cinemaRepository)
         {
             this.movieRepository = movieRepository;
             this.categoryRepository = categoryRepository;
@@ -23,7 +23,7 @@ namespace ETickets.Controllers
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(categoryRepository.GetAll(), "Id", "Name");
-            ViewBag.Cinemas =new SelectList( cinemaRepository.GetAll(),"Id","Name");
+            ViewBag.Cinemas = new SelectList(cinemaRepository.GetAll(), "Id", "Name");
             ViewBag.MovieStatuses = new SelectList(Enum.GetValues(typeof(MovieStatus)));
 
             return View();
@@ -33,11 +33,21 @@ namespace ETickets.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Movie movie, IFormFile PhotoUrl)
         {
-            movieRepository.CreateWithImage(movie, PhotoUrl, "movies", "ImgUrl");
-            return RedirectToAction("MovieCRUD", "Dashboard");
+            ModelState.Remove(nameof(PhotoUrl));
+            if (ModelState.IsValid)
+            {
+                if (movie.MovieStatus == MovieStatus.Expired)
+                {
+                    movie.TotalTickets = 0;
+                    movie.TicketsSold = 0;
+                }
+                movieRepository.CreateWithImage(movie, PhotoUrl, "movies", "ImgUrl");
+                return RedirectToAction("MovieCRUD", "Dashboard");
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
         }
 
-        public IActionResult Edit(int id) 
+        public IActionResult Edit(int id)
         {
             ViewBag.Categories = new SelectList(categoryRepository.GetAll(), "Id", "Name");
             ViewBag.Cinemas = new SelectList(cinemaRepository.GetAll(), "Id", "Name");
@@ -48,22 +58,31 @@ namespace ETickets.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Movie movie, IFormFile PhotoUrl) 
+        public IActionResult Edit(Movie movie, IFormFile PhotoUrl)
         {
-            var oldActor = movieRepository.GetById(movie.Id);
-            movieRepository.UpdateImage(movie, PhotoUrl, oldActor.ImgUrl, "movies", "ImgUrl");
-            return RedirectToAction("MovieCRUD", "Dashboard");
+            ModelState.Remove(nameof(PhotoUrl));
+            if (ModelState.IsValid)
+            {
+                var oldActor = movieRepository.GetById(movie.Id);
+                if (movie.MovieStatus == MovieStatus.Expired)
+                {
+                    movie.TotalTickets = 0;
+                    movie.TicketsSold = 0;
+
+                }
+                movieRepository.UpdateImage(movie, PhotoUrl, oldActor.ImgUrl, "movies", "ImgUrl");
+                return RedirectToAction("MovieCRUD", "Dashboard");
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
         }
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
         {
-            var movie = movieRepository.GetById(id);
-            ViewBag.Categories = new SelectList(categoryRepository.GetAll());
-            ViewBag.Cinemas = new SelectList(cinemaRepository.GetAll());
+            var movie = movieRepository.GetWithIncludes(e => e.Id == id, "Category", "Cinema").FirstOrDefault();
             return View(movie);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Movie movie) 
+        public IActionResult Delete(Movie movie)
         {
             movieRepository.Delete(movie);
             return RedirectToAction("MovieCRUD", "Dashboard");

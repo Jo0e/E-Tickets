@@ -43,22 +43,35 @@ namespace ETickets.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Actor actor, IFormFile PhotoUrl)
         {
-            actorRepository.CreateWithImage(actor, PhotoUrl, "cast", "ProfilePicture");
-            return RedirectToAction(nameof(AllActors));
+            ModelState.Remove(nameof(PhotoUrl));
+            if (ModelState.IsValid)
+            {
+                actorRepository.CreateWithImage(actor, PhotoUrl, "cast", "ProfilePicture");
+                return RedirectToAction(nameof(AllActors));
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
         }
 
         public IActionResult Edit(int id)
         {
+
             var actor = actorRepository.GetById(id);
             return View(actor);
+
+
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Actor actor, IFormFile PhotoUrl)
         {
-            var oldActor = actorRepository.GetById(actor.Id);
-            actorRepository.UpdateImage(actor, PhotoUrl, oldActor.ProfilePicture, "cast", "ProfilePicture");
-            return RedirectToAction("AllActors");
+            ModelState.Remove(nameof(PhotoUrl));
+            if (ModelState.IsValid)
+            {
+                var oldActor = actorRepository.GetById(actor.Id);
+                actorRepository.UpdateImage(actor, PhotoUrl, oldActor.ProfilePicture, "cast", "ProfilePicture");
+                return RedirectToAction("AllActors");
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
         }
         public IActionResult Delete(int id)
         {
@@ -67,23 +80,75 @@ namespace ETickets.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(Actor actor)
         {
             actorRepository.Delete(actor);
             return RedirectToAction("AllActors");
         }
 
-
-        public IActionResult AllActors()
+        [AllowAnonymous]
+        public IActionResult ActorMovies(int actorId)
         {
-            var actors = actorRepository.GetAll();
-            return View(actors);
+            var movie = actorMovieRepository.GetWithIncludes(e => e.ActorId == actorId, "Actor", "Movie").ToList();
+            return View(movie);
         }
 
-        public IActionResult AssignActors()
+        public IActionResult AllActors(string? Name = null, int pageNumber = 1)
         {
-            var actors = actorMovieRepository.GetAll("Actor", "Movie");
-            return View(actors);
+            IEnumerable<Actor> actors;
+            if (Name == null)
+                actors = actorRepository.GetAll();
+            else
+                actors = actorRepository.GetWithIncludes(filter: e => e.FirstName.Contains(Name) || e.LastName.Contains(Name));
+
+
+            if (!actors.Any())
+            {
+                TempData["NotFound"] = "Sorry we cant found the Actor try again";
+                return RedirectToAction("AllActors");
+            }
+            int itemsNum = 8;
+            int totalMovies = actors.Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+
+            return View(actors.Skip((pageNumber - 1) * itemsNum).Take(itemsNum));
+
+        }
+
+        public IActionResult AssignActors(string? Name = null, int pageNumber = 1)
+        {
+            IEnumerable<ActorMovie> actors;
+            if (Name == null)
+                actors = actorMovieRepository.GetAll("Actor", "Movie");
+            else
+                actors = actorMovieRepository.GetWithIncludes(filter: e => e.Actor.FirstName.Contains(Name) || e.Actor.LastName.Contains(Name) || e.Movie.Name.Contains(Name), "Actor", "Movie");
+
+            if (!actors.Any())
+            {
+                TempData["NotFound"] = "Sorry we cant find a thing try again";
+                return RedirectToAction("AssignActors");
+            }
+
+            int itemsNum = 8;
+            int totalMovies = actors.Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+
+            return View(actors.Skip((pageNumber - 1) * itemsNum).Take(itemsNum));
         }
 
         public IActionResult AssignNew()
@@ -100,7 +165,6 @@ namespace ETickets.Controllers
             actorMovieRepository.Add(actorMovie);
             return RedirectToAction("AssignActors");
         }
-
         public IActionResult UnAssign(ActorMovie actorMovie)
         {
             actorMovieRepository.Delete(actorMovie);

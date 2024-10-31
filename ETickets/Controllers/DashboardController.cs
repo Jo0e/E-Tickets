@@ -25,25 +25,90 @@ namespace ETickets.Controllers
             return View();
         }
 
-        public IActionResult MovieCRUD() 
+        public IActionResult MovieCRUD(string? Name = null, int pageNumber = 1)
         {
-            var movies = movieRepository.GetAll("Category", "Cinema");
+            IEnumerable<Movie> movies;
+            if (Name == null)
 
-            return View(movies);
+                movies = movieRepository.GetAll("Category", "Cinema");
+
+            else
+                movies = movieRepository.GetWithIncludes(filter: e => e.Name.Contains(Name), "Category", "Cinema");
+
+            if (!movies.Any())
+            {
+                TempData["NotFound"] = "Sorry we cant found the Movie try again";
+                return RedirectToAction("MovieCRUD");
+            }
+            int itemsNum = 8;
+            int totalMovies = movies.Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+            return View(movies.Skip((pageNumber - 1) * itemsNum).Take(itemsNum));
         }
 
-        public IActionResult CinemaCRUD()
+        public IActionResult CinemaCRUD(string? Name = null, int pageNumber = 1)
         {
-            var cinema = cinemaRepository.GetAll();
+            IEnumerable<Cinema> cinema;
+            if (Name == null)
+                cinema = cinemaRepository.GetAll();
 
-            return View(cinema);
+            else
+                cinema = cinemaRepository.GetWithIncludes(filter: e => e.Name.Contains(Name));
+
+            if (!cinema.Any())
+            {
+                TempData["NotFound"] = "Sorry we cant found the cinema try again";
+                return RedirectToAction("CinemaCRUD");
+            }
+
+            int itemsNum = 8;
+            int totalMovies = cinema.Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+            return View(cinema.Skip((pageNumber - 1) * itemsNum).Take(itemsNum));
+
         }
 
-        public IActionResult CategoryCRUD()
+        public IActionResult CategoryCRUD(string? Name = null, int pageNumber = 1)
         {
-            var category = categoryRepository.GetAll();
+            IEnumerable<Category> category;
+            if (Name == null)
+                category = categoryRepository.GetAll();
 
-            return View(category);
+            else
+                category = categoryRepository.GetWithIncludes(filter: e => e.Name.Contains(Name));
+
+            if (!category.Any())
+            {
+                TempData["NotFound"] = "Sorry we cant found the category try again";
+                return RedirectToAction("CategoryCRUD");
+            }
+            int itemsNum = 8;
+            int totalMovies = category.Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+            return View(category.Skip((pageNumber - 1) * itemsNum).Take(itemsNum));
+
         }
     }
 }

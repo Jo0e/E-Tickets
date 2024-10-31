@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Wishlist>
+
+@{
+    ViewData["Title"] = "My Wishlist";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr class="mb-4" />
+@if (!Model.Any())
+{
+    <p>Your wishlist is empty.</p>
+}
+else
+{
+    <div class="cards-wrap">
+        @foreach (var item in Model)
+        {
+            <div class="col-mb-3 m-2">
+                <div class="card mb-3 pb-4" style="max-width: 420px;">
+                    <div class="row g-0">
+                        <div class="card-header">
+                            <h5 class="card-title">@item.Movie.Name</h5>
+                        </div>
+                        <div class="col-md-4">
+                            <img src="~/images/movies/@item.Movie.ImgUrl" class="img-fluid card-img h-100" alt="...">
+                        </div>
+
+                        <div class="col-md-8">
+                            <a href="/Wishlist/RemoveFromWishlist?wishlistId=@item.WishlistId" class="btn btn-danger wish-del"><i class="bi bi-trash3"></i></a>
+                            <div class="card-body">
+                                <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@item.Movie.Price</span></p>
+                                <p class="card-text">Start Date: @item.Movie.StartDate.ToString("MMMM dd, yyyy")</p>
+                                <p class="card-text">End Date: @item.Movie.EndDate.ToString("MMMM dd, yyyy")</p>
+                                <span class="badge badge-primary card-text " style="padding:10px 15px;">@item.Movie.MovieStatus</span>
+                                <div>
+                                    <a href="/Home/Details?id=@item.Movie.Id" class="btn btn-outline-secondary">More Details</a>
+                                    |
+                                    <a href="/Carts/TicketIndex?movieId=@item.Movie.Id" id="bookBtn-@item.MovieId" class="btn btn-success book-btn"
+                                       data-moviestatus="@((int)item.Movie.MovieStatus)">Book Ticket</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@* java script code to make the button of booking disabled and red in case the movie status is Expired *@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".book-btn").each(function () {
+            var movieStatus = $(this).data("moviestatus");
+            if (movieStatus == 2) {
+                $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
+            }
+        });
+    });
+</script>

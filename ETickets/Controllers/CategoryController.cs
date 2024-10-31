@@ -34,10 +34,29 @@ namespace ETickets.Controllers
             return View(categories);
         }
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public IActionResult Details(int id, int pageNumber = 1)
         {
-            //var movies = context.Movies.Include(e => e.Cinema).Include(m => m.Category).Where(c => c.Category.Id == id).ToList();
-            var movies = movieRepository.GetMoviesByCategory(id);
+            if (id != 0)
+            {
+                Response.Cookies.Append("CategoryId", id.ToString());
+            }
+            if (id == 0)
+            {
+                id = int.Parse(Request.Cookies["CategoryId"]);
+            }
+
+            int itemsNum = 4;
+            int totalMovies = movieRepository.GetMoviesByCategory(id).Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+
+            var movies = movieRepository.GetMoviesByCategory(id).Skip((pageNumber - 1) * itemsNum).Take(itemsNum);
             return View(movies);
         }
 
@@ -96,8 +115,13 @@ namespace ETickets.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
-            categoryRepository.Add(category);
-            return RedirectToAction("CategoryCRUD", "Dashboard");
+            if (!ModelState.IsValid)
+            {
+                categoryRepository.Add(category);
+                return RedirectToAction("CategoryCRUD", "Dashboard");
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
+
         }
 
         public IActionResult Edit(int id)
@@ -107,19 +131,24 @@ namespace ETickets.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category category) 
+        public IActionResult Edit(Category category)
         {
-            categoryRepository.Update(category);
-            return RedirectToAction("CategoryCRUD", "Dashboard");
+            if (ModelState.IsValid)
+            {
+                categoryRepository.Update(category);
+                return RedirectToAction("CategoryCRUD", "Dashboard");
+            }
+
+            return RedirectToAction("SomeThingWrong", "Errors");
         }
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
         {
             var category = categoryRepository.GetById(id);
             return View(category);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Category category) 
+        public IActionResult Delete(Category category)
         {
             categoryRepository.Delete(category);
             return RedirectToAction("CategoryCRUD", "Dashboard");

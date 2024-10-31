@@ -4,6 +4,7 @@ using ETickets.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ETickets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241029173220_editRelationCartAndTicket")]
+    partial class editRelationCartAndTicket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actors", (string)null);
+                    b.ToTable("Actors");
                 });
 
             modelBuilder.Entity("ETickets.Models.ActorMovie", b =>
@@ -67,7 +70,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("ActorMovies", (string)null);
+                    b.ToTable("ActorMovies");
                 });
 
             modelBuilder.Entity("ETickets.Models.ApplicationUser", b =>
@@ -158,7 +161,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("ETickets.Models.Category", b =>
@@ -175,7 +178,7 @@ namespace ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ETickets.Models.Cinema", b =>
@@ -204,7 +207,7 @@ namespace ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cinemas", (string)null);
+                    b.ToTable("Cinemas");
                 });
 
             modelBuilder.Entity("ETickets.Models.Movie", b =>
@@ -265,7 +268,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("CinemaId");
 
-                    b.ToTable("Movies", null, t =>
+                    b.ToTable("Movies", t =>
                         {
                             t.HasTrigger("TR_UpdateMovieStatusOnEndDate");
                         });
@@ -306,7 +309,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("ETickets.Models.Wishlist", b =>
@@ -330,7 +333,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Wishlist", (string)null);
+                    b.ToTable("Wishlist");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

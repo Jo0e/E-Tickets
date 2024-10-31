@@ -5,11 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>AssignActors</h1>
+<div class="d-flex justify-content-between">
+    <h1>AssignActors</h1>
+    <h1 class="text-center"><a href="/Dashboard/index"><i class="bi bi-arrow-left-circle" style="color:#2c377d;"></i> </a> </h1>
+</div>
+<hr />
+<p class="flex-column">
+    <form asp-action="AssignActors" class="d-flex">
+        <div class="col-2">
+            <a asp-action="AssignNew" class="btn btn-outline-light">Assign Actors</a>
 
-<p>
-    <a asp-action="AssignNew" class="btn btn-outline-light">Assign New Actors</a>
+        </div>
+        <input type="text" class="form-control me-3" id="movieSearch" name="Name" aria-label="Search by Actor or Movie Name..." placeholder="Search by Actor or Movie Name.." required />
+        <button type="submit" class="btn btn-light"><i class="bi bi-search"></i></button>
+    </form>
 </p>
+<hr />
+@if (TempData["NotFound"] != null)
+{
+    <div class="error-inner ">
+        <h1 class="text-center reglar-text" style="font-size:6rem;"><i class="bi bi-patch-exclamation"></i></h1>
+    </div>
+    <h3 class="text-center reglar-text">@TempData["NotFound"]</h3>
+    <hr />
+}
+
+
 <table class="table">
     <thead>
         <tr>
@@ -34,7 +55,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("Edit Actor", "Edit", new { id = item.ActorId }) |
-                    @Html.ActionLink("Edit Movie", "Edit","Movie", new { id = item.MovieId }) |
+                    @Html.ActionLink("Edit Movie", "Edit", "Movie", new { id = item.MovieId }) |
                     @Html.ActionLink("Movie Details", "Details", "Home", new { id = item.MovieId }) |
                     @Html.ActionLink("UnAssign", "UnAssign", new { MovieId = item.MovieId, ActorId = item.ActorId })
                 </td>
@@ -42,3 +63,29 @@
         }
     </tbody>
 </table>
+
+
+
+<div>
+    <hr />
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item @(ViewBag.pageNumber <= 1 ? "disabled":"")">
+                <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber - 1)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i <= ViewBag.totalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.pageNumber ? "active" : "")">
+                    <a class="page-link" href="?pageNumber=@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(ViewBag.pageNumber >= ViewBag.totalPages ? "disabled" : "")">
+                <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber + 1)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -43,6 +43,8 @@ public class MovieRepository : Repository<Movie>, IMovieRepository
             return dbSet
                 .Include(m => m.Category)
                 .Include(m => m.Cinema)
+                .Include(m=>m.ActorMovies)
+                 .ThenInclude(e=>e.Actor)
                 .FirstOrDefault(m => m.Id == id);   
     }
 

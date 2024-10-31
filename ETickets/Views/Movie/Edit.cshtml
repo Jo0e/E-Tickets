@@ -30,7 +30,6 @@
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="ImgUrl" class="control-label"></label>
                 <input asp-for="ImgUrl" class="form-control" type="file" name="PhotoUrl" />
@@ -65,6 +64,12 @@
                 <label asp-for="CategoryId" class="control-label"></label>
                 <select asp-for="CategoryId" class="form-control" asp-items="Categories"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalTickets" class="control-label"></label>
+                <input asp-for="TotalTickets" class="form-control" />
+                <span asp-validation-for="TotalTickets" class="text-danger"></span>
+            </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" /> |

@@ -45,6 +45,17 @@ namespace ETickets.Repository
             dbSet.Remove(item);
             context.SaveChanges();
         }
+        public void Commit()
+        {
+            context.SaveChanges();
+        }
+
+        public IQueryable<T> ThenInclude<TProperty, TThenProperty>( Expression<Func<T, TProperty>> includeExpression,
+            Expression<Func<TProperty, TThenProperty>> thenIncludeExpression)
+        {
+            return dbSet.Include(includeExpression).ThenInclude(thenIncludeExpression);
+        }
+
 
         public ICollection<T> GetWithIncludes(Expression<Func<T, bool>> filter, params string[] includes)
         {
@@ -125,11 +136,5 @@ namespace ETickets.Repository
             context.SaveChanges();
 
         }
-
-
-
-
-
-
     }
 }

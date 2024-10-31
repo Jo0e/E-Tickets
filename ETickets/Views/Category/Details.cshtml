@@ -8,6 +8,29 @@
 </div>
 
 
+<div>
+    <hr />
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item @(ViewBag.pageNumber <= 1 ? "disabled":"")">
+                <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber - 1)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i <= ViewBag.totalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.pageNumber ? "active" : "")">
+                    <a class="page-link" href="?pageNumber=@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(ViewBag.pageNumber >= ViewBag.totalPages ? "disabled" : "")">
+                <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber + 1)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

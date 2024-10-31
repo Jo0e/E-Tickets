@@ -13,5 +13,10 @@ namespace ETickets.Controllers
         {
             return View();
         }
+        public IActionResult SomeThingWrong() 
+        {
+            return View();
+        }
+
     }
 }

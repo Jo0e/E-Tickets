@@ -4,6 +4,7 @@ using ETickets.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ETickets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241026180037_addWishlist")]
+    partial class addWishlist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actors", (string)null);
+                    b.ToTable("Actors");
                 });
 
             modelBuilder.Entity("ETickets.Models.ActorMovie", b =>
@@ -67,7 +70,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("ActorMovies", (string)null);
+                    b.ToTable("ActorMovies");
                 });
 
             modelBuilder.Entity("ETickets.Models.ApplicationUser", b =>
@@ -139,28 +142,6 @@ namespace ETickets.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("ETickets.Models.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Carts", (string)null);
-                });
-
             modelBuilder.Entity("ETickets.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -175,7 +156,7 @@ namespace ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ETickets.Models.Cinema", b =>
@@ -204,7 +185,7 @@ namespace ETickets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cinemas", (string)null);
+                    b.ToTable("Cinemas");
                 });
 
             modelBuilder.Entity("ETickets.Models.Movie", b =>
@@ -245,16 +226,6 @@ namespace ETickets.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TicketsSold")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("TotalTickets")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
                     b.Property<string>("TrailerUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -265,48 +236,12 @@ namespace ETickets.Migrations
 
                     b.HasIndex("CinemaId");
 
-                    b.ToTable("Movies", null, t =>
+                    b.ToTable("Movies", t =>
                         {
                             t.HasTrigger("TR_UpdateMovieStatusOnEndDate");
                         });
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
-                });
-
-            modelBuilder.Entity("ETickets.Models.Ticket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MovieName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("ETickets.Models.Wishlist", b =>
@@ -330,7 +265,7 @@ namespace ETickets.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Wishlist", (string)null);
+                    b.ToTable("Wishlist");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -485,17 +420,6 @@ namespace ETickets.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("ETickets.Models.Cart", b =>
-                {
-                    b.HasOne("ETickets.Models.ApplicationUser", "User")
-                        .WithMany("Carts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ETickets.Models.Movie", b =>
                 {
                     b.HasOne("ETickets.Models.Category", "Category")
@@ -513,33 +437,6 @@ namespace ETickets.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Cinema");
-                });
-
-            modelBuilder.Entity("ETickets.Models.Ticket", b =>
-                {
-                    b.HasOne("ETickets.Models.Cart", "Cart")
-                        .WithMany("Tickets")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ETickets.Models.Movie", "Movie")
-                        .WithMany("Tickets")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ETickets.Models.ApplicationUser", "User")
-                        .WithMany("Tickets")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ETickets.Models.Wishlist", b =>
@@ -619,16 +516,7 @@ namespace ETickets.Migrations
 
             modelBuilder.Entity("ETickets.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Carts");
-
-                    b.Navigation("Tickets");
-
                     b.Navigation("Wishlists");
-                });
-
-            modelBuilder.Entity("ETickets.Models.Cart", b =>
-                {
-                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("ETickets.Models.Category", b =>
@@ -644,8 +532,6 @@ namespace ETickets.Migrations
             modelBuilder.Entity("ETickets.Models.Movie", b =>
                 {
                     b.Navigation("ActorMovies");
-
-                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

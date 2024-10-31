@@ -1,0 +1,93 @@
+﻿@model Movie
+
+@if (TempData["failed"]!= null)
+{
+    @section Scripts{
+    <script>
+        
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr.error('@TempData["failed"]')
+    </script>
+    }
+}
+
+<hr />
+<div class="d-flex justify-content-between text-center">
+    <h3>Add @Model.Name to Cart</h3>
+    <div>
+        <span class="badge text-bg-dark av-badge">Tickets Remaining: @Model.TicketsRemaining</span>
+        <span class="badge text-bg-dark av-badge"> @Model.MovieStatus</span>
+
+    </div>
+</div>
+<hr />
+<form  asp-action="AddToCart" >
+<div class="card mb-3 col-12 " style="max-width: 100%;">
+    <div class="row ">
+        <div class="col-md-2 ">
+            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid " alt="...">
+        </div>
+        <div class="col-md-5 card-body">
+            <div class=" ">
+                <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@Model.Price</span></p>
+                <p class="card-text">Cinema: @Model.Cinema.Name</p>
+                <p class="card-text">Start Date: @Model.StartDate.ToString()</p>
+                <p class="card-text">Category: @Model.Category.Name</p>
+
+            </div>
+
+        </div>
+      
+
+        <div class="col-md-5  card-body">
+            <div class="d-flex" style="height: 220px; position:absolute; right:110%;">
+                <div class="vr"></div>
+            </div>
+
+            <h4>Party Time:-</h4>
+            <div class="form-check mb-1">
+                <input class="form-check-input " type="radio" name="PartyTime" value="04:00 PM" id="flexRadioDefault1" required>
+                <label class="form-check-label" for="flexRadioDefault1">
+                    04:00 PM
+                </label>
+            </div>
+            <div class="form-check mb-1">
+                <input class="form-check-input " type="radio" name="PartyTime" value="07:00 PM" id="flexRadioDefault2">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    07:00 PM
+                </label>
+            </div>
+            <div class="form-check mb-1">
+                <input class="form-check-input " type="radio" name="PartyTime" value="12:00 AM" id="flexRadioDefault3">
+                <label class="form-check-label" for="flexRadioDefault3">
+                    12:00 AM
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="card-button gap-3">
+        <label class="col-form-label" for="Count">Count:</label>
+        <input class="form-control col-1" id="Count" type="number" name="Count" required />
+        <input  type="hidden" name="movieId" value="@Model.Id" />
+        <button class="btn btn-success book-btn" >Add to Cart <i class="bi bi-cart4"></i></button>
+    </div>
+</form>
+

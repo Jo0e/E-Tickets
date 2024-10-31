@@ -29,10 +29,28 @@ namespace ETickets.Controllers
             return View(cinemas);
         }
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public IActionResult Details(int id, int pageNumber = 1)
         {
-            // var movies = context.Movies.Include(m => m.Category).Include(e => e.Cinema).Where(c => c.Cinema.Id == id).ToList();
-            var movies = movieRepository.GetMoviesByCinema(id);
+            if (id != 0)
+            {
+                Response.Cookies.Append("cinemaId", id.ToString());
+            }
+            if (id == 0)
+            {
+                id = int.Parse(Request.Cookies["cinemaId"]);
+            }
+
+            int itemsNum = 4;
+            int totalMovies = movieRepository.GetMoviesByCinema(id).Count();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)itemsNum);
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > totalPages)
+                return RedirectToAction("NotFound", "Errors");
+
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.totalPages = totalPages;
+            var movies = movieRepository.GetMoviesByCinema(id).Skip((pageNumber - 1) * itemsNum).Take(itemsNum);
             return View(movies);
         }
 
@@ -46,8 +64,12 @@ namespace ETickets.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Cinema cinema)
         {
-            cinemaRepository.Add(cinema);
-            return RedirectToAction("CinemaCRUD", "Dashboard");
+            if (ModelState.IsValid)
+            {
+                cinemaRepository.Add(cinema);
+                return RedirectToAction("CinemaCRUD", "Dashboard");
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
         }
 
         public IActionResult Edit(int id)
@@ -60,8 +82,12 @@ namespace ETickets.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Cinema cinema)
         {
-            cinemaRepository.Update(cinema);
-            return RedirectToAction("CinemaCRUD", "Dashboard");
+            if (ModelState.IsValid)
+            {
+                cinemaRepository.Update(cinema);
+                return RedirectToAction("CinemaCRUD", "Dashboard");
+            }
+            return RedirectToAction("SomeThingWrong", "Errors");
 
         }
 

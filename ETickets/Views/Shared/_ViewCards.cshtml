@@ -1,4 +1,10 @@
 ﻿@model Movie
+@{
+    var wishlist = ViewBag.Wishlist as List<int>;
+    var isInWishlist = wishlist != null && wishlist.Contains(Model.Id);
+    var showStar = ViewData.ContainsKey("ShowStar") ? (bool)ViewData["ShowStar"] : false;
+}
+
 <div class="card mb-3 pb-4" style="max-width: 540px;">
     <div class="row g-0">
         <div class="card-header">
@@ -16,16 +22,27 @@
                 <p class="card-text">End Date: @Model.EndDate.ToString("MMMM dd, yyyy")</p>
                 <p class="card-text">Category: @Model.Category.Name</p>
                 <span class="badge badge-primary card-text" style=" padding:10px 15px;"> @Model.MovieStatus</span>
-                <h3 class="card-star"><i class="bi bi-star"></i></h3>
+
+                @*                 <a href="/Wishlist/AddToWishlist?movieId=@Model.Id" class="card-star" > <i class="bi bi-star-fill"></i></a>*@
+
+                @if (showStar)
+                {
+                    <a href="#" class="card-star @(isInWishlist ? "golden-star" : "")" data-movie-id="@Model.Id">
+                        <i class="bi bi-star-fill"></i>
+                    </a>
+                }
+
+
             </div>
             <div class="card-button">
+
                 <a href="/Home/Details?id=@Model.Id" class="btn btn-outline-secondary">More Details</a>
-
-
-                <a id="bookBtn-@Model.Id" class="btn btn-success book-btn"
+                <a href="/Carts/TicketIndex?movieId=@Model.Id" id="bookBtn-@Model.Id" class="btn btn-success book-btn"
                    data-moviestatus="@((int)Model.MovieStatus)">Book Ticket</a>
+
             </div>
         </div>
     </div>
 </div>
+
 
