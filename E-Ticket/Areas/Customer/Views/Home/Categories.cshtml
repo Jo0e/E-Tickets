@@ -1,0 +1,29 @@
+﻿@model ICollection<Category>
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Categories</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+
+                <td>
+                    <a href="/Customer/Home/CategoryMovies?categoryId=@item.Id">All Movies</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

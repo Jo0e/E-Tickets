@@ -1,0 +1,92 @@
+﻿@model ICollection<Movie>
+@{
+    var category = ViewBag.Categories as ICollection<Category>;
+    var Cinema = ViewBag.Cinemas as ICollection<Cinema>;
+}
+
+<h3>Find the perfect movie for you</h3>
+<hr />
+<form class="row g-3" asp-area="Customer" asp-controller="Home" asp-action="Filter" method="post">
+    <div class="col-md-4">
+        <label for="CategoryId" class="form-label">Category</label>
+        <select id="CategoryId" name="CategoryId" class="form-select" required>
+            <option value="" disabled selected hidden>Select a Category</option> <!-- Placeholder -->
+            @foreach (var item in category)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="CinemaId" class="form-label">Cinema</label>
+        <select id="CinemaId" name="CinemaId" class="form-select" required>
+            <option value="" disabled selected hidden>Select a cinema</option> <!-- Placeholder -->
+            @foreach (var item in Cinema)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="AvailabilityId" class="form-label">Availability</label>
+        <select id="AvailabilityId" name="AvailabilityId" class="form-select" required>
+            <option value="" disabled selected hidden>Select Availability</option> <!-- Placeholder -->
+            <option value="Available">Available</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Expired">Expired</option>
+        </select>
+    </div>
+
+    <hr />
+    <div class="row-cols-md-6  text-center mt-4 mb-5">
+        <button type="submit" class="btn btn-dark btn-color">Submit</button>
+    </div>
+</form>
+
+@if (TempData["NotFound"] != null)
+{
+    <div class="error-inner ">
+        <h1 class="text-center reglar-text" style="font-size:8rem;"><i class="bi bi-patch-exclamation"></i></h1>
+    </div>
+    <h3 class="text-center reglar-text">@TempData["NotFound"]</h3>
+
+}
+
+@* JS for Prevent form submission without choosing Values *@
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        let categorySelect = document.getElementById('CategoryId');
+        let cinemaSelect = document.getElementById('CinemaId');
+        let cinemaSelect = document.getElementById('AvailabilityId');
+
+        if (categorySelect.value === "" || cinemaSelect.value === "" || availabilitySelect.value === "") {
+            e.preventDefault();
+            alert('Please select valid options for Category, Cinema, and Availability.');
+        }
+    });
+</script>
+
+
+
+
+
+<div class="cards-wrap">
+    @foreach (var item in Model)
+    {
+        @await Html.PartialAsync("_ViewCards", item)
+    }
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".book-btn").each(function () {
+            var movieStatus = $(this).data("moviestatus");
+            if (movieStatus == 2) {
+                $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
+            }
+        });
+    });
+</script>

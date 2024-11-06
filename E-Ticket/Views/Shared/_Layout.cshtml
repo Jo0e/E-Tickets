@@ -1,0 +1,146 @@
+﻿@using E_Ticket.Utility
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - E_Ticket</title>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/E_Ticket.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light ">
+            <div class="container-fluid">
+
+                <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo4.png" style="width:5.5rem; " alt="Logo" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ">
+
+
+
+                        <div class="dropdown">
+                            <a class="dropdown-toggle btn " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                &ensp;<i class="bi bi-person-circle nav-icon"></i>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <partial name="_LoginPartial.cshtml"></partial>
+                            </ul>
+                        </div>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link text-light " asp-area="Customer" asp-controller="Home" asp-action="Index">&ensp;<i class="bi bi-house-door nav-icon">&ensp;</i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light " asp-area="Customer" asp-controller="Home" asp-action="Categories">&ensp;<i class="bi bi-list-task nav-icon"></i>&ensp;</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light " asp-area="Customer" asp-controller="Home" asp-action="Cinemas">&ensp;<i class="bi bi-tv nav-icon"></i>&ensp;</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light " asp-area="Customer" asp-controller="Home" asp-action="Filter">&ensp;<i class="bi bi-filter nav-icon"></i>&ensp;</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @* Wishlist *@
+
+                            <li>
+                                <a class="nav-link text-light" asp-area="Customer" asp-controller="Carts" asp-action="Index"><i class="bi bi-cart3 nav-icon"></i></a>
+                            </li>
+
+                            <li>
+                                <a class="nav-link text-light" asp-area="Customer" asp-controller="Wishlist" asp-action="ViewWishlist"><i class="bi bi-bookmark-star nav-icon"></i>&ensp;</a>
+                            </li>
+                        }
+                        @if (User.IsInRole(SD.AdminRole))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light  btn btn-outline-secondary" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">&ensp;Dashboard&ensp;</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="Search-bar">
+                        <form action="/Customer/Home/Search" method="post" class="d-flex">
+                            <input type="search" class="form-control me-2" id="movieSearch" name="Name" aria-label="Search for movie..." placeholder="Search for movie..." required />
+                            <button type="submit" class="btn btn-light"><i class="bi bi-search"></i></button>
+                            <div id="suggestions" class="list-group position-absolute w-100"></div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @* <footer class="border-top footer text-muted">
+    <div class="container">
+    &copy; 2024 - E_Ticket - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+    </footer> *@
+
+    <script>
+        $(document).ready(function () {
+            $('#movieSearch').on('input', function () {
+                let query = $(this).val();
+                if (query.length > 1) {
+                    $.ajax({
+                        url: '/Customer/Home/SearchMovies',
+                        type: 'GET',
+                        data: { name: query },
+                        success: function (data) {
+                            $('#suggestions').empty();
+                            let itemsToShow = data.slice(0, 3); // Limit to 3 items
+                            itemsToShow.forEach(movie => {
+                                $('#suggestions').append(`
+                                       <a href="/Customer/Home/Details?movieId=${movie.id}" class="list-group-item list-group-item-action d-flex align-items-center">
+                                       <img src="/images/movies/${movie.imgUrl}" alt="${movie.name}" class="img-thumbnail me-2" style="width: 50px; height: auto;">
+                                                ${movie.name}
+                                                                </a>
+                                                                    `);
+                            });
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty();
+                }
+            });
+        });
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

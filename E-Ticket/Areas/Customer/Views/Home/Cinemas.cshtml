@@ -1,0 +1,29 @@
+﻿@model ICollection<Cinema>
+@{
+    ViewData["Title"] = "Cinemas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Cinemas</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+
+                <td>
+                    <a href="/Customer/Home/CinemaMovies?cinemaId=@item.Id">All Movies</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

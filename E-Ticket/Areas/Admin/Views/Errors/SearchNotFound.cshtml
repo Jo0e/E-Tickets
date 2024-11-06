@@ -1,0 +1,21 @@
+﻿<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<section class="error-page section">
+	<div class="containe">
+		<div class="row">
+			<div class="col-lg-6 offset-lg-3 col-12">
+				<!-- Error Inner -->
+				<div class="error-inner">
+					<h1><i class="bi bi-emoji-frown"></i><span>sorry we can't find that Movie!</span></h1>
+
+					<form asp-area="Customer" asp-controller="Home" asp-action="Search" method="post" class="search-form">
+						<input class="me-2 mt-4" id="movieSearch" placeholder="Try Search Again.." type="text" name="Name" required>
+						<button class="btn" type="submit"><i class="fa fa-search"></i></button>
+						<div id="suggestions" class="list-group position-absolute w-100"></div>
+					</form>
+
+				</div>
+				<!--/ End Error Inner -->
+			</div>
+		</div>
+	</div>
+</section>

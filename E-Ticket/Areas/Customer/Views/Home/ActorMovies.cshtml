@@ -1,0 +1,53 @@
+﻿@model ICollection<Movie>
+
+
+<div class="cards-wrap">
+    @foreach (var item in Model)
+    {
+
+        <div class="card mb-3 pb-4" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="card-header">
+                    <h5 class="card-title">@item.Name</h5>
+                </div>
+
+                <div class="col-md-4">
+                    <img src="~/images/movies/@item.ImgUrl" class="img-fluid  card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@item.Price</span></p>
+                        <p class="card-text">Start Date: @item.StartDate.ToString("MMMM dd, yyyy")</p>
+                        <p class="card-text">End Date: @item.EndDate.ToString("MMMM dd, yyyy")</p>
+                        <p class="card-text">Category: @item.Category.Name</p>
+
+                        <span class="badge badge-primary card-text" style=" padding:10px 15px;"> @item.MovieStatus</span>
+
+                    </div>
+                    <div class="card-button">
+
+                        <a href="/Customer/Home/Details?movieId=@item.Id" class="btn btn-outline-secondary">More Details</a>
+                        <a href="/Customer/Carts/AddToCart?movieId=@item.Id" id="bookBtn-@item.Id" class="btn btn-success book-btn"
+                           data-moviestatus="@((int)item.MovieStatus)">Book Ticket</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".book-btn").each(function () {
+            var movieStatus = $(this).data("moviestatus");
+            if (movieStatus == 2) {
+                $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
+            }
+        });
+    });
+</script>
+

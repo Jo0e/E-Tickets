@@ -1,0 +1,22 @@
+﻿@model Actor
+
+@{
+    ViewData["Title"] = Model.FullName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card" style="width: 100%;">
+    <div class="card-body">
+        <img src="/images/cast/@Model.ProfilePicture" width="60" /> <br />
+        <h4>@Model.FullName</h4>
+        <hr />
+        <div class="card-body">
+            <p class="card-text"> <strong>Bio </strong> :@Model.Bio</p>
+            <p class="card-text"> <strong>News </strong>: @Model.News</p>
+        </div>
+        <div class="card-button">
+            <a href="">Social Media</a>
+            <a href="/Customer/Home/ActorMovies?actorId=@Model.Id">All movies of @Model.FullName</a>
+        </div>
+    </div>
+</div>

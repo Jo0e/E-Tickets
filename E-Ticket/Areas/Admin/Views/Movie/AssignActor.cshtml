@@ -1,0 +1,46 @@
+﻿@model Movie
+
+<div class="card mb-3 pb-4" style="max-width: 100%;">
+    <div class="row g-0">
+        <div class="card-header">
+            <h5 class="card-title">@Model.Name</h5>
+        </div>
+        <div class="col-md-4">
+            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">Movie details:</h5>
+                <p class="card-text">@Model.Description</p>
+            </div>
+
+
+            <form asp-action="AssignActor" method="post" class="m-2">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group ">
+                    <label>Actors:- </label>
+                    <div class="cards-wrap justify-content-md-start " style="max-height:50%; ">
+                        @foreach (var actor in ViewBag.AllActors)
+                        {
+                            int actorId;
+                            if (int.TryParse(actor.Value, out actorId))
+                            {
+                                <div class="form-check m-1">
+                                    <input type="checkbox" class="form-check-input" id="actor_@actor.Value" name="AssignedActors" value="@actor.Value" @(ViewBag.AssignedActors.Contains(actorId) ? "checked" : "") />
+                                    <label class="form-check-label" for="actor_@actor.Value">@actor.Text</label>
+                                    <hr />
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save</button>
+
+            </form>
+
+
+
+        </div>
+    </div>
+</div>

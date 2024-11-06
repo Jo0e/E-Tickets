@@ -1,0 +1,73 @@
+﻿@model IEnumerable<E_Ticket.Models.OrderList>
+
+@{
+    ViewData["Title"] = "User Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex justify-content-between">
+    <h1>Your Orders:-</h1>
+    <h1 class="text-center"><a href="/Customer/Home/index"><i class="bi bi-arrow-left-circle" style="color:#2c377d;"></i> </a> </h1>
+</div>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie)
+            </th>
+            <th>
+                Tickets Quantity
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Movie.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @item.TotalPrice.ToString("F2")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div>
+    <hr />
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item @(ViewBag.pageNumber <= 1 ? "disabled":"")">
+                <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber - 1)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i <= ViewBag.totalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.pageNumber ? "active" : "")">
+                    <a class="page-link" href="?pageNumber=@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(ViewBag.pageNumber >= ViewBag.totalPages ? "disabled" : "")">
+                <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber + 1)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

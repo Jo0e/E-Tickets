@@ -1,0 +1,75 @@
+﻿@model ICollection<CinemaMovie>
+<div class="cards-wrap">
+    @foreach (var item in Model){
+<div class="card mb-3 pb-4" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="card-header">
+            <h5 class="card-title">@item.Movie.Name</h5>
+        </div>
+
+        <div class="col-md-4">
+            <img src="~/images/movies/@item.Movie.ImgUrl" class="img-fluid  card-img" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <p class="card-text">Price: <span class="badge text-bg-dark" style="background-color:gray;">@item.Movie.Price</span></p>
+
+
+                <p class="card-text">Start Date: @item.Movie.StartDate.ToString("MMMM dd, yyyy")</p>
+                <p class="card-text">End Date: @item.Movie.EndDate.ToString("MMMM dd, yyyy")</p>
+                        <p class="card-text">Category: @item.Cinema.Name</p>
+                <span class="badge badge-primary card-text" style=" padding:10px 15px;"> @item.Movie.MovieStatus</span>
+              
+
+
+            </div>
+            <div class="card-button">
+
+                <a href="/Customer/Home/Details?movieId=@item.Movie.Id" class="btn btn-outline-secondary">More Details</a>
+                        <a href="/Customer/Carts/AddToCart?movieId=@item.Movie.Id" id="bookBtn-@item.Movie.Id" class="btn btn-success book-btn"
+                   data-moviestatus="@((int)item.Movie.MovieStatus)">Book Ticket</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    }
+
+
+    <div>
+        <hr />
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center mt-3">
+                <li class="page-item @(ViewBag.pageNumber <= 1 ? "disabled":"")">
+                    <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber - 1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @for (int i = 1; i <= ViewBag.totalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.pageNumber ? "active" : "")">
+                        <a class="page-link" href="?pageNumber=@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(ViewBag.pageNumber >= ViewBag.totalPages ? "disabled" : "")">
+                    <a class="page-link" href="?pageNumber=@(ViewBag.pageNumber + 1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".book-btn").each(function () {
+                var movieStatus = $(this).data("moviestatus");
+                if (movieStatus == 2) {
+                    $(this).removeClass("btn-success").addClass("btn-danger disabled").text("Expired").prop("disabled", true);
+                }
+            });
+        });
+    </script>

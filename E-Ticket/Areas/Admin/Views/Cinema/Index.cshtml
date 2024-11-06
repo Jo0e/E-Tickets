@@ -1,0 +1,59 @@
+﻿@model IEnumerable<E_Ticket.Models.Cinema>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex justify-content-between">
+    <h1>Cinemas</h1>
+    <h1 class="text-center"><a href="/Admin/Dashboard/index"><i class="bi bi-arrow-left-circle" style="color:#2c377d;"></i> </a> </h1>
+</div>
+<hr />
+<p class="flex-column">
+    <div class="col-2">
+        <a asp-action="Create" class="btn btn-outline-light ">Create New</a>
+    </div>
+</p>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CinemaLogo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CinemaLogo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-cinemaId="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-cinemaId="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
