@@ -25,7 +25,7 @@ namespace E_Ticket
            .UseSqlServer(builder.Configuration.GetConnectionString("DefualtConnection")));
 
 
-            //builder.Services.AddTransient<IEmailSender>();
+            
             builder.Services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];

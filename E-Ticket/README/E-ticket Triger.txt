@@ -1,0 +1,28 @@
+USE [ETickets-new]
+GO
+
+/****** Object:  Trigger [dbo].[TR_UpdateMovieStatusOnEndDate]    Script Date: 11/6/2024 12:51:31 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TRIGGER [dbo].[TR_UpdateMovieStatusOnEndDate]
+ON [dbo].[Movies]
+AFTER insert , UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Update MovieStatus to Expired if EndDate is less than or equal to current date
+    UPDATE Movies
+    SET MovieStatus = 2 -- Expired
+    WHERE EndDate <= GETDATE() AND MovieStatus != 2; -- Only update if not already expired
+END;
+GO
+
+ALTER TABLE [dbo].[Movies] ENABLE TRIGGER [TR_UpdateMovieStatusOnEndDate]
+GO
+
+
