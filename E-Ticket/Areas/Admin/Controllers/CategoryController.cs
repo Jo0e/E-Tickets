@@ -3,6 +3,7 @@ using E_Ticket.Repository.IRepository;
 using E_Ticket.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace E_Ticket.Areas.Admin.Controllers
 {
@@ -11,10 +12,12 @@ namespace E_Ticket.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository categoryRepository;
+        private readonly ILogger<CategoryController> logger;
 
-        public CategoryController(ICategoryRepository categoryRepository)
+        public CategoryController(ICategoryRepository categoryRepository,ILogger<CategoryController> logger)
         {
             this.categoryRepository = categoryRepository;
+            this.logger = logger;
         }
 
         public IActionResult Index()
@@ -36,6 +39,7 @@ namespace E_Ticket.Areas.Admin.Controllers
             {
                 categoryRepository.Create(category);
                 categoryRepository.Commit();
+                Log(nameof(Create), nameof(category));
                 return RedirectToAction("index");
             }
             return RedirectToAction("SomeThingWrong", "Errors");
@@ -55,6 +59,7 @@ namespace E_Ticket.Areas.Admin.Controllers
             {
                 categoryRepository.Update(category);
                 categoryRepository.Commit();
+                Log(nameof(Edit), nameof(category));
                 return RedirectToAction("Index");
             }
 
@@ -71,9 +76,14 @@ namespace E_Ticket.Areas.Admin.Controllers
         {
             categoryRepository.Delete(category);
             categoryRepository.Commit();
+            Log(nameof(Delete), nameof(category));
             return RedirectToAction("Index");
         }
 
-
+        public void Log(string action, string entity)
+        {
+            var admin = User.Identity.Name;
+            LoggerHelper.LogAdminAction(logger, admin, action, entity);
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace E_Ticket.Models
         [Range(1, 10000)]
         public double Price { get; set; }
         [ValidateNever]
-        public string ImgUrl { get; set; }
+        public string? ImgUrl { get; set; } = "default.jpg";
         public string TrailerUrl { get; set; }
 
         public DateTime StartDate { get; set; }

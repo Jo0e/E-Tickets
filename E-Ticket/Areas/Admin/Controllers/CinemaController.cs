@@ -11,10 +11,12 @@ namespace E_Ticket.Areas.Admin.Controllers
     public class CinemaController : Controller
     {
         private readonly ICinemaRepository cinemaRepository;
+        private readonly ILogger<CinemaController> logger;
 
-        public CinemaController(ICinemaRepository cinemaRepository)
+        public CinemaController(ICinemaRepository cinemaRepository,ILogger<CinemaController> logger)
         {
             this.cinemaRepository = cinemaRepository;
+            this.logger = logger;
         }
 
         public IActionResult Index()
@@ -35,6 +37,7 @@ namespace E_Ticket.Areas.Admin.Controllers
             {
                 cinemaRepository.Create(cinema);
                 cinemaRepository.Commit();
+                Log(nameof(Create), nameof(cinema));
                 return RedirectToAction("Index");
             }
             return RedirectToAction("SomeThingWrong", "Errors");
@@ -54,6 +57,7 @@ namespace E_Ticket.Areas.Admin.Controllers
             {
                 cinemaRepository.Update(cinema);
                 cinemaRepository.Commit();
+                Log(nameof(Edit), nameof(cinema));
                 return RedirectToAction("Index");
             }
             return RedirectToAction("SomeThingWrong", "Errors");
@@ -71,7 +75,15 @@ namespace E_Ticket.Areas.Admin.Controllers
         {
             cinemaRepository.Delete(cinema);
             cinemaRepository.Commit();
+            Log(nameof(Delete), nameof(cinema));
             return RedirectToAction("Index");
+        }
+
+
+        public void Log(string action, string entity)
+        {
+            var admin = User.Identity.Name;
+            LoggerHelper.LogAdminAction(logger, admin, action, entity);
         }
 
     }

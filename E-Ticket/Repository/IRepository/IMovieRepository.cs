@@ -4,7 +4,8 @@ namespace E_Ticket.Repository.IRepository
 {
     public interface IMovieRepository : IRepository<Movie>
     {
-        public Movie GetDetails(int id);
+        public Movie? GetDetails(int id);
+        ICollection<Movie> GetAllMoviesDetails();
         ICollection<Movie> SearchMovies(string name);
         ICollection<Movie> GetMoviesByFilter(int categoryId, int cinemaId, MovieStatus availabilityId);
 

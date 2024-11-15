@@ -26,11 +26,11 @@ namespace E_Ticket
 
 
             
-            builder.Services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-            });
+            //builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+            //{
+            //    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            //    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            //});
 
             // Other service registrations...
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

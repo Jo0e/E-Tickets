@@ -2,6 +2,7 @@
 using E_Ticket.Models;
 using E_Ticket.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 
 namespace E_Ticket.Repository
 {
@@ -14,7 +15,7 @@ namespace E_Ticket.Repository
             this.context = context;
         }
 
-        public Movie GetDetails(int id)
+        public Movie? GetDetails(int id)
         {
             return dbSet
                 .Include(e => e.Category)
@@ -23,15 +24,26 @@ namespace E_Ticket.Repository
                 .Include(e => e.ActorMovies)
                 .ThenInclude(e => e.Actor)
                 .FirstOrDefault(e=>e.Id == id);
-
         }
+        
+        public ICollection<Movie> GetAllMoviesDetails()
+        {
+            return dbSet
+                .Include(e => e.Category)
+                .Include(e => e.CinemaMovies)
+                .ThenInclude(e=>e.Cinema)
+                .Include(e => e.ActorMovies)
+                .ThenInclude(e => e.Actor)
+                .ToList();
+        }
+       
 
 
         public ICollection<Movie> SearchMovies(string name)
         {
             return dbSet
                 .Include(m => m.Category)
-                .Where(m => m.Name.Contains(name))
+                .Where(m => m.Name.Contains(name.Trim()))
                 .ToList();
         }
 

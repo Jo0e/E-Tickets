@@ -60,6 +60,12 @@ namespace E_Ticket.Repository
             dbSet.Add(entity);
         }
 
+        public void AddRange(ICollection<T> entity)
+        {
+            dbSet.AddRange(entity);
+        }
+
+
         public void Update(T entity)
         {
             dbSet.Update(entity);

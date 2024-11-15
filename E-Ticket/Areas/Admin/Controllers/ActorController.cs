@@ -12,10 +12,12 @@ namespace E_Ticket.Areas.Admin.Controllers
     public class ActorController : Controller
     {
         private readonly IActorRepository actorRepository;
+        private readonly ILogger<ActorController> logger;
 
-        public ActorController(IActorRepository actorRepository)
+        public ActorController(IActorRepository actorRepository,ILogger<ActorController> logger)
         {
             this.actorRepository = actorRepository;
+            this.logger = logger;
         }
 
         public IActionResult Index(string? Name = null, int pageNumber = 1)
@@ -61,7 +63,11 @@ namespace E_Ticket.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 actorRepository.CreateWithImage(actor, PhotoUrl, "cast", "ProfilePicture");
+
+                Log(nameof(Create), nameof(actor));
+
                 return RedirectToAction("Index");
+
             }
             return RedirectToAction("SomeThingWrong", "Errors");
         }
@@ -81,6 +87,9 @@ namespace E_Ticket.Areas.Admin.Controllers
             {
                 var oldActor = actorRepository.GetOne(where: e => e.Id == actor.Id , tracked: false);
                 actorRepository.UpdateImage(actor, PhotoUrl, oldActor.ProfilePicture, "cast", "ProfilePicture");
+                
+                Log(nameof(Edit), nameof(actor));
+
                 return RedirectToAction("Index");
             }
             return RedirectToAction("SomeThingWrong", "Errors");
@@ -96,7 +105,15 @@ namespace E_Ticket.Areas.Admin.Controllers
         public IActionResult Delete(Actor actor)
         {
             actorRepository.Delete(actor);
+            Log(nameof(Delete),nameof(actor));
             return RedirectToAction("Index");
+        }
+
+
+        public void Log(string action , string entity)
+        {
+            var admin = User.Identity.Name;
+            LoggerHelper.LogAdminAction(logger, admin, action, entity);
         }
 
 

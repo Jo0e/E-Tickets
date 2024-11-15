@@ -4,7 +4,7 @@ namespace E_Ticket.Repository.IRepository
 {
     public interface IRepository<T> where T : class
     {
-
+        void AddRange(ICollection<T> entity);
         void Create(T entity);
         void Update(T entity);
         void Delete(T entity);
